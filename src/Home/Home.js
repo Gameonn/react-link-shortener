@@ -8,13 +8,16 @@ const Home = (props) => {
   const [transferLink, setTransferLink] = useState(null);
   useEffect(() => {
     const pathname = window.location.pathname.replace(/^\/|\/$/g, "");
+    console.log(pathname, "pathname");
     if (pathname) {
       setPath(pathname);
       const savedLinks = JSON.parse(localStorage.getItem("links"));
       const linkToTransfer = Object.keys(savedLinks).find(
         (key) => savedLinks[key] === pathname
       );
+      console.log(linkToTransfer, "linkToTransfer");
       if (linkToTransfer) {
+        console.log(window.location, "window location");
         window.location.href = linkToTransfer;
         setTransferLink(linkToTransfer);
       }
@@ -23,11 +26,13 @@ const Home = (props) => {
 
   const formHandler = (e) => {
     e.preventDefault();
-    const newUrl = inputEl.current.value;
+    const newUrl = inputEl.current.value.replace(/^\/|\/$/g, "");
+    console.log(newUrl, "newUrl");
     const prevSavedShortLinks = JSON.parse(localStorage.getItem("links"));
+    console.log(prevSavedShortLinks, "savedLinks");
     let linkReference = null;
     if (prevSavedShortLinks) linkReference = prevSavedShortLinks[newUrl];
-
+    console.log(linkReference, "linkReference");
     if (!linkReference) {
       linkReference = generateAndValidateLink();
       let updatedLinks = { ...prevSavedShortLinks, [newUrl]: linkReference };
@@ -88,7 +93,10 @@ const Home = (props) => {
     e.target.nextSibling.className = "active";
   };
 
-  if (path && !transferLink) return <NotFound />;
+  if (path) {
+    if (!transferLink) return <NotFound />;
+    else return false;
+  }
 
   return (
     <div className="row teal lighten-4">
