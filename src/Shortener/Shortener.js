@@ -9,16 +9,13 @@ const Shortener = (props) => {
   const [transferLink, setTransferLink] = useState(null);
   useEffect(() => {
     const pathname = window.location.pathname.replace(/^\/|\/$/g, "");
-    console.log(pathname, "pathname");
     if (pathname) {
       setPath(pathname);
       const savedLinks = JSON.parse(localStorage.getItem("links"));
       const linkToTransfer = Object.keys(savedLinks).find(
         (key) => savedLinks[key] === pathname
       );
-      console.log(linkToTransfer, "linkToTransfer");
       if (linkToTransfer) {
-        console.log(window.location, "window location");
         window.location.href = linkToTransfer;
         setTransferLink(linkToTransfer);
       }
@@ -28,12 +25,9 @@ const Shortener = (props) => {
   const formHandler = (e) => {
     e.preventDefault();
     const newUrl = inputEl.current.value.replace(/^\/|\/$/g, "");
-    console.log(newUrl, "newUrl");
     const prevSavedShortLinks = JSON.parse(localStorage.getItem("links"));
-    console.log(prevSavedShortLinks, "savedLinks");
     let linkReference = null;
     if (prevSavedShortLinks) linkReference = prevSavedShortLinks[newUrl];
-    console.log(linkReference, "linkReference");
     if (!linkReference) {
       linkReference = generateAndValidateLink();
       let updatedLinks = { ...prevSavedShortLinks, [newUrl]: linkReference };
@@ -63,7 +57,6 @@ const Shortener = (props) => {
 
   const validateSlug = (slug) => {
     const links = JSON.parse(localStorage.getItem("links"));
-    console.log(links);
     if (!links) return true;
     if (Object.values(links).indexOf(slug) > -1) {
       return false;
